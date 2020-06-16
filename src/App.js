@@ -6,13 +6,14 @@ import {
   // Redirect
 } from "react-router-dom";
 import Pdf from "./pages/PrintReadyPdf";
+import Template from "./pages/Template";
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route exact path="/">
-          <Pdf />
+          <Template />
         </Route>
         <Route exact path="/print">
           <Pdf />
