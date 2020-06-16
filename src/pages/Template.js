@@ -27,14 +27,25 @@ function Template() {
     paxCount: 0
   });
 
-  // const [selectedDate, setSelectedDate] = useState({
-  //   startDate: new Date()
-  // });
+  const [departDate, setDepartDate] = useState(new Date());
+  const [departTime, setDepartTime] = useState(new Date());
+  const [arriveDate, setArriveDate] = useState(new Date());
+  const [arriveTime, setArriveTime] = useState(new Date());
 
-  // const handleDateSelection = date => {
-  //   setSelectedDate((selectedDate.startDate = date));
-  // };
-  const [startDate, setStartDate] = useState(new Date());
+  const [dateAndTime, setDateAndTime] = useState({
+    departDate: new Date(),
+    departTime: new Date(),
+    arriveDate: new Date(),
+    arriveTime: new Date()
+  });
+
+  const handleDateChange = (name, date) => {
+    console.log(name);
+    setDateAndTime({
+      ...dateAndTime,
+      [name]: date
+    });
+  };
 
   const renderOptions = () => {
     let options = [];
@@ -181,15 +192,15 @@ function Template() {
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={startDate}
-            onChange={date => setStartDate(date)}
+            selected={departDate}
+            onChange={date => setDepartDate(date)}
             dateFormat="MMMM d, yyyy"
           />
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={startDate}
-            onChange={date => setStartDate(date)}
+            selected={departTime}
+            onChange={time => setDepartTime(time)}
             showTimeSelect
             showTimeSelectOnly
             timeIntervals={1}
@@ -241,8 +252,24 @@ function Template() {
             onChange={handleChange}
           />
         </Grid.Column>
-        <Grid.Column width={2}>June 23, 2020</Grid.Column>
-        <Grid.Column width={2}>5:33PM EDT</Grid.Column>
+        <Grid.Column width={2}>
+          <DatePicker
+            selected={arriveDate}
+            onChange={date => setArriveDate(date)}
+            dateFormat="MMMM d, yyyy"
+          />
+        </Grid.Column>
+        <Grid.Column width={2}>
+          <DatePicker
+            selected={arriveTime}
+            onChange={time => setArriveTime(time)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={1}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </Grid.Column>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
