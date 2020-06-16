@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Image, Container } from "semantic-ui-react";
+import { Grid, Image } from "semantic-ui-react";
 
 function Pdf() {
   return (

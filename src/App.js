@@ -14,6 +14,9 @@ function App() {
         <Route exact path="/">
           <Pdf />
         </Route>
+        <Route exact path="/print">
+          <Pdf />
+        </Route>
       </Switch>
     </Router>
   );
