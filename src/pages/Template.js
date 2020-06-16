@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Grid, Image, Input, Form } from "semantic-ui-react";
-import html2canvas from "html2canvas";
-import jsPdf from "jspdf";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function Template() {
   const [formState, setFormState] = useState({
@@ -25,6 +26,15 @@ function Template() {
     flightTime: "",
     paxCount: 0
   });
+
+  // const [selectedDate, setSelectedDate] = useState({
+  //   startDate: new Date()
+  // });
+
+  // const handleDateSelection = date => {
+  //   setSelectedDate((selectedDate.startDate = date));
+  // };
+  const [startDate, setStartDate] = useState(new Date());
 
   const renderOptions = () => {
     let options = [];
@@ -109,7 +119,7 @@ function Template() {
             onChange={handleChange}
           />
           <Input
-            placeholder="Your Email"
+            placeholder="Client Email"
             name="clientEmail"
             type="email"
             id="clientEmail"
@@ -169,8 +179,24 @@ function Template() {
             onChange={handleChange}
           />
         </Grid.Column>
-        <Grid.Column width={2}>June 23, 2020</Grid.Column>
-        <Grid.Column width={2}>9:00AM PDT</Grid.Column>
+        <Grid.Column width={2}>
+          <DatePicker
+            selected={startDate}
+            onChange={date => setStartDate(date)}
+            dateFormat="MMMM d, yyyy"
+          />
+        </Grid.Column>
+        <Grid.Column width={2}>
+          <DatePicker
+            selected={startDate}
+            onChange={date => setStartDate(date)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={1}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </Grid.Column>
         <Grid.Column width={2}>
           {" "}
           <Input
