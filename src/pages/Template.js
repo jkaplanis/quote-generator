@@ -31,14 +31,6 @@ function Template() {
 
   const history = useHistory();
 
-  const renderOptions = () => {
-    let options = [];
-    for (let i = 1; i <= 200; i++) {
-      options.push({ key: i, text: i, value: i });
-    }
-    return options;
-  };
-
   const handleChange = event => {
     const { name, value } = event.target;
     setFormState({
@@ -217,12 +209,10 @@ function Template() {
           />
         </Grid.Column>
         <Grid.Column width={2}>
-          {" "}
-          <Form.Select
-            fluid
+          <Input
             name="paxCount"
             id="paxCount"
-            options={renderOptions()}
+            type="number"
             placeholder="0"
             onChange={handleChange}
           />
