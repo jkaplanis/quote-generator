@@ -1,7 +1,13 @@
 import React from "react";
 import { Grid, Image } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 
 function Pdf() {
+  const history = useHistory();
+  const userInput = history.location.formState;
+  console.log(history.location.formState);
+  // console.log(history.location.formState.departTime.getHours());
+
   return (
     <Grid>
       <Grid.Row>
@@ -12,39 +18,39 @@ function Pdf() {
           />
         </Grid.Column>
         <Grid.Column floated="right" width={5}>
-          <p>John Smith</p>
-          <p>Phone: 555-555-5555</p>
+          <p>{userInput.sellerName}</p>
+          <p>Phone: {userInput.sellerPhone}</p>
           <p>
-            Email: <a href="mailto:john@company.com">john@company.com</a>
+            Email: <a href="mailto:john@company.com">{userInput.sellerEmail}</a>
           </p>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Reference</Grid.Column>
-        <Grid.Column width={14}>EE-1449 June 15, 2020 3:33pm</Grid.Column>
+        <Grid.Column width={14}>{userInput.reference}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Prepared for</Grid.Column>
         <Grid.Column width={14}>
-          <p>Mary Customer</p>
-          <p>P: 555-123-4567</p>
-          <p>mary@customer.com</p>
+          <p>{userInput.clientName}</p>
+          <p>P: {userInput.clientPhone}</p>
+          <p>{userInput.clientEmail}</p>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Quote</Grid.Column>
         <Grid.Column width={8}>Total aircraft cost</Grid.Column>
-        <Grid.Column width={6}>$42,123</Grid.Column>
+        <Grid.Column width={6}>{userInput.quoteCost}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column style={{ textAlign: "right" }} width={10}>
           Total
         </Grid.Column>
-        <Grid.Column width={6}>$42,123</Grid.Column>
+        <Grid.Column width={6}>{userInput.quoteCost}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Aircraft</Grid.Column>
-        <Grid.Column width={14}> Gulfstream G650</Grid.Column>
+        <Grid.Column width={14}>{userInput.aircraftType}</Grid.Column>
       </Grid.Row>
       <Grid.Row style={{ fontWeight: "bold" }}>
         <Grid.Column width={2}></Grid.Column>
@@ -57,16 +63,16 @@ function Pdf() {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Itinerary</Grid.Column>
-        <Grid.Column width={4}>VAN NUYS, California, US (KVNY)</Grid.Column>
+        <Grid.Column width={4}>{userInput.departAirport}</Grid.Column>
         <Grid.Column width={2}>June 23, 2020</Grid.Column>
         <Grid.Column width={2}>9:00AM PDT</Grid.Column>
-        <Grid.Column width={2}>2,8301 nm</Grid.Column>
-        <Grid.Column width={2}>5:33</Grid.Column>
-        <Grid.Column width={2}>6 PAX</Grid.Column>
+        <Grid.Column width={2}>{userInput.distance} nm</Grid.Column>
+        <Grid.Column width={2}>{userInput.flightTime}</Grid.Column>
+        <Grid.Column width={2}>{userInput.paxCount} PAX</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={4}> TETORBORO, New Jersey, US (KTEB)</Grid.Column>
+        <Grid.Column width={4}> {userInput.arriveAirport}</Grid.Column>
         <Grid.Column width={2}>June 23, 2020</Grid.Column>
         <Grid.Column width={2}>5:33PM EDT</Grid.Column>
         <Grid.Column width={2}></Grid.Column>

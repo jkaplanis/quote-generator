@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Grid, Image, Input, Form } from "semantic-ui-react";
+import { Redirect, useHistory } from "react-router-dom";
+import { Grid, Image, Input, Form, Button } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
+import Pdf from "./PrintReadyPdf";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -15,37 +17,19 @@ function Template() {
     clientEmail: "",
     quoteType: "",
     quoteCost: "",
-    aircratType: "",
+    aircraftType: "",
     departAirport: "",
-    departDate: "",
-    departTime: "",
-    arriveAirport: "",
-    arriveDate: "",
-    arriveTime: "",
-    distance: "",
-    flightTime: "",
-    paxCount: 0
-  });
-
-  const [departDate, setDepartDate] = useState(new Date());
-  const [departTime, setDepartTime] = useState(new Date());
-  const [arriveDate, setArriveDate] = useState(new Date());
-  const [arriveTime, setArriveTime] = useState(new Date());
-
-  const [dateAndTime, setDateAndTime] = useState({
     departDate: new Date(),
     departTime: new Date(),
+    arriveAirport: "",
     arriveDate: new Date(),
-    arriveTime: new Date()
+    arriveTime: new Date(),
+    distance: "",
+    flightTime: "",
+    paxCount: ""
   });
 
-  const handleDateChange = (name, date) => {
-    console.log(name);
-    setDateAndTime({
-      ...dateAndTime,
-      [name]: date
-    });
-  };
+  const history = useHistory();
 
   const renderOptions = () => {
     let options = [];
@@ -61,6 +45,10 @@ function Template() {
       ...formState,
       [name]: value
     });
+  };
+
+  const renderPdf = () => {
+    history.push({ pathname: "/print", formState });
   };
 
   return (
@@ -192,15 +180,15 @@ function Template() {
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={departDate}
-            onChange={date => setDepartDate(date)}
+            selected={formState.departDate}
+            onChange={date => setFormState({ ...formState, departDate: date })}
             dateFormat="MMMM d, yyyy"
           />
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={departTime}
-            onChange={time => setDepartTime(time)}
+            selected={formState.departTime}
+            onChange={time => setFormState({ ...formState, departTime: time })}
             showTimeSelect
             showTimeSelectOnly
             timeIntervals={1}
@@ -254,15 +242,15 @@ function Template() {
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={arriveDate}
-            onChange={date => setArriveDate(date)}
+            selected={formState.arriveDate}
+            onChange={date => setFormState({ ...formState, arriveDate: date })}
             dateFormat="MMMM d, yyyy"
           />
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
-            selected={arriveTime}
-            onChange={time => setArriveTime(time)}
+            selected={formState.arriveTime}
+            onChange={time => setFormState({ ...formState, arriveTime: time })}
             showTimeSelect
             showTimeSelectOnly
             timeIntervals={1}
@@ -274,6 +262,9 @@ function Template() {
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
       </Grid.Row>
+      <Button positive onClick={renderPdf}>
+        Create PDF
+      </Button>
     </Grid>
   );
 }
