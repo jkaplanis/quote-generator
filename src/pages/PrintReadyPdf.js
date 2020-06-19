@@ -5,8 +5,23 @@ import { useHistory } from "react-router-dom";
 function Pdf() {
   const history = useHistory();
   const userInput = history.location.formState;
-  console.log(history.location.formState);
-  // console.log(history.location.formState.departTime.getHours());
+
+  //convert military time to standard
+  const convertTime = time => {
+    const hours = time.getHours();
+    let minutes = time.getMinutes();
+    if (minutes < 10) {
+      minutes = `0${minutes}`;
+    }
+    if (hours < 12) {
+      return `${hours}:${minutes}AM`;
+    } else if (hours === 12) {
+      return `${hours}:${minutes}PM`;
+    } else if (hours > 12) {
+      const standardHours = hours - 12;
+      return `${standardHours}:${minutes}PM`;
+    }
+  };
 
   return (
     <Grid>
@@ -21,7 +36,10 @@ function Pdf() {
           <p>{userInput.sellerName}</p>
           <p>Phone: {userInput.sellerPhone}</p>
           <p>
-            Email: <a href="mailto:john@company.com">{userInput.sellerEmail}</a>
+            Email:{" "}
+            <a href={`mailto:${userInput.sellerEmail}`}>
+              {userInput.sellerEmail}
+            </a>
           </p>
         </Grid.Column>
       </Grid.Row>
@@ -65,7 +83,9 @@ function Pdf() {
         <Grid.Column width={2}>Itinerary</Grid.Column>
         <Grid.Column width={4}>{userInput.departAirport}</Grid.Column>
         <Grid.Column width={2}>June 23, 2020</Grid.Column>
-        <Grid.Column width={2}>9:00AM PDT</Grid.Column>
+        <Grid.Column width={2}>
+          {convertTime(userInput.departTime)} PDT
+        </Grid.Column>
         <Grid.Column width={2}>{userInput.distance} nm</Grid.Column>
         <Grid.Column width={2}>{userInput.flightTime}</Grid.Column>
         <Grid.Column width={2}>{userInput.paxCount} PAX</Grid.Column>
@@ -74,7 +94,9 @@ function Pdf() {
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={4}> {userInput.arriveAirport}</Grid.Column>
         <Grid.Column width={2}>June 23, 2020</Grid.Column>
-        <Grid.Column width={2}>5:33PM EDT</Grid.Column>
+        <Grid.Column width={2}>
+          {convertTime(userInput.arriveTime)} EDT
+        </Grid.Column>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
