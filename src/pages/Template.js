@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
-import { Grid, Image, Input, Form, Button } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
+import { Grid, Image, Input, Button } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 import Pdf from "./PrintReadyPdf";
-
 import "react-datepicker/dist/react-datepicker.css";
+
+// "https://www.getlivewire.com/wp-content/uploads/2018/10/Your-Logo-here.png"
 
 function Template() {
   const [formState, setFormState] = useState({
+    sellerLogo: "",
     sellerName: "",
     sellerPhone: "",
     sellerEmail: "",
@@ -31,6 +33,7 @@ function Template() {
 
   const history = useHistory();
 
+  //update state with user input
   const handleChange = event => {
     const { name, value } = event.target;
     setFormState({
@@ -39,6 +42,20 @@ function Template() {
     });
   };
 
+  const handleImgUpload = event => {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      //add the image file to state
+      setFormState({
+        ...formState,
+        sellerLogo: e.target.result
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  //render pdf upon user clicking create PDF button
   const renderPdf = () => {
     history.push({ pathname: "/print", formState });
   };
@@ -47,10 +64,12 @@ function Template() {
     <Grid>
       <Grid.Row>
         <Grid.Column width={5}>
-          <Image
-            style={{ maxWidth: "150px" }}
-            src="https://www.getlivewire.com/wp-content/uploads/2018/10/Your-Logo-here.png"
-          />
+          <Input
+            type="file"
+            name="sellerLogo"
+            onChange={e => handleImgUpload(e)}
+          ></Input>
+          <Image style={{ maxHeight: "150px" }} src={formState.sellerLogo} />
         </Grid.Column>
         {/* Seller Contact Info */}
         <Grid.Column floated="right" width={5}>

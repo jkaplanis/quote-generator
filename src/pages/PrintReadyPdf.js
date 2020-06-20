@@ -1,6 +1,8 @@
 import React from "react";
-import { Grid, Image } from "semantic-ui-react";
+import { Grid, Image, Button } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import html2canvas from "html2canvas";
+import jsPdf from "jspdf";
 
 function Pdf() {
   const history = useHistory();
@@ -23,14 +25,26 @@ function Pdf() {
     }
   };
 
+  const printPdf = () => {
+    const domElement = document.getElementById("page");
+    html2canvas(domElement, {
+      onclone: document => {
+        document.getElementById("print-button").style.visibility = "hidden";
+      }
+    }).then(canvas => {
+      console.log(canvas);
+      const img = canvas.toDataURL("image/png");
+      const pdf = new jsPdf();
+      pdf.addImage(img, "JPEG", 0, 0);
+      pdf.save("your-filename.pdf");
+    });
+  };
+
   return (
-    <Grid>
+    <Grid id="page">
       <Grid.Row>
         <Grid.Column width={5}>
-          <Image
-            style={{ maxWidth: "150px" }}
-            src="https://www.getlivewire.com/wp-content/uploads/2018/10/Your-Logo-here.png"
-          />
+          <Image style={{ maxHeight: "150px" }} src={userInput.sellerLogo} />
         </Grid.Column>
         <Grid.Column floated="right" width={5}>
           <p>{userInput.sellerName}</p>
@@ -101,6 +115,9 @@ function Pdf() {
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={2}></Grid.Column>
       </Grid.Row>
+      <Button positive id="print-button" onClick={printPdf}>
+        Save PDF
+      </Button>
     </Grid>
   );
 }
