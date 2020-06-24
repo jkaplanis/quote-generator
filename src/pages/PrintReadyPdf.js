@@ -25,6 +25,7 @@ function Pdf() {
     }
   };
 
+  //function to remove button, screenshot dom, and save pdf (jsPdf)
   const printPdf = () => {
     const domElement = document.getElementById("page");
     html2canvas(domElement, {
@@ -32,7 +33,6 @@ function Pdf() {
         document.getElementById("print-button").style.visibility = "hidden";
       }
     }).then(canvas => {
-      console.log(canvas);
       const img = canvas.toDataURL("image/png");
       const pdf = new jsPdf();
       pdf.addImage(img, "JPEG", 0, 0);
@@ -72,13 +72,13 @@ function Pdf() {
       <Grid.Row>
         <Grid.Column width={2}>Quote</Grid.Column>
         <Grid.Column width={8}>Total aircraft cost</Grid.Column>
-        <Grid.Column width={6}>{userInput.quoteCost}</Grid.Column>
+        <Grid.Column width={6}>${userInput.quoteCost}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column style={{ textAlign: "right" }} width={10}>
           Total
         </Grid.Column>
-        <Grid.Column width={6}>{userInput.quoteCost}</Grid.Column>
+        <Grid.Column width={6}>${userInput.quoteCost}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={2}>Aircraft</Grid.Column>
@@ -96,7 +96,9 @@ function Pdf() {
       <Grid.Row>
         <Grid.Column width={2}>Itinerary</Grid.Column>
         <Grid.Column width={4}>{userInput.departAirport}</Grid.Column>
-        <Grid.Column width={2}>June 23, 2020</Grid.Column>
+        <Grid.Column width={2}>
+          {userInput.departDate.toDateString()}
+        </Grid.Column>
         <Grid.Column width={2}>
           {convertTime(userInput.departTime)} PDT
         </Grid.Column>
@@ -107,7 +109,9 @@ function Pdf() {
       <Grid.Row>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={4}> {userInput.arriveAirport}</Grid.Column>
-        <Grid.Column width={2}>June 23, 2020</Grid.Column>
+        <Grid.Column width={2}>
+          {userInput.arriveDate.toDateString()}
+        </Grid.Column>
         <Grid.Column width={2}>
           {convertTime(userInput.arriveTime)} EDT
         </Grid.Column>

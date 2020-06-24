@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Image, Input, Button } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
-import Pdf from "./PrintReadyPdf";
 import "react-datepicker/dist/react-datepicker.css";
-
-// "https://www.getlivewire.com/wp-content/uploads/2018/10/Your-Logo-here.png"
 
 function Template() {
   const [formState, setFormState] = useState({
@@ -32,6 +29,7 @@ function Template() {
   });
 
   const history = useHistory();
+  const todaysDate = new Date().toDateString();
 
   //update state with user input
   const handleChange = event => {
@@ -64,11 +62,13 @@ function Template() {
     <Grid>
       <Grid.Row>
         <Grid.Column width={5}>
-          <Input
-            type="file"
-            name="sellerLogo"
-            onChange={e => handleImgUpload(e)}
-          ></Input>
+          <div>
+            <Input
+              type="file"
+              name="sellerLogo"
+              onChange={e => handleImgUpload(e)}
+            ></Input>
+          </div>
           <Image style={{ maxHeight: "150px" }} src={formState.sellerLogo} />
         </Grid.Column>
         {/* Seller Contact Info */}
@@ -97,7 +97,9 @@ function Template() {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={2}>Reference</Grid.Column>
+        <Grid.Column className="label" width={2}>
+          Reference
+        </Grid.Column>
         <Grid.Column width={14}>
           {" "}
           <Input
@@ -106,13 +108,15 @@ function Template() {
             type="text"
             id="reference"
             onChange={handleChange}
-          />{" "}
-          June 15, 2020 3:33pm
+          />
+          {`${todaysDate}`}
         </Grid.Column>
       </Grid.Row>
       {/* Client Contact Info */}
       <Grid.Row>
-        <Grid.Column width={2}>Prepared for</Grid.Column>
+        <Grid.Column className="label" width={2}>
+          Prepared for
+        </Grid.Column>
         <Grid.Column width={14}>
           <Input
             placeholder="Client Name"
@@ -138,7 +142,9 @@ function Template() {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={2}>Quote</Grid.Column>
+        <Grid.Column className="label" width={2}>
+          Quote
+        </Grid.Column>
         <Grid.Column width={8}>Total aircraft cost</Grid.Column>
         <Grid.Column width={6}>
           <Input
@@ -157,7 +163,9 @@ function Template() {
         <Grid.Column width={6}>${formState.quoteCost}</Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={2}>Aircraft</Grid.Column>
+        <Grid.Column className="label" width={2}>
+          Aircraft
+        </Grid.Column>
         <Grid.Column width={14}>
           {" "}
           <Input
@@ -179,7 +187,9 @@ function Template() {
         <Grid.Column width={2}>Passenger Count</Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={2}>Itinerary</Grid.Column>
+        <Grid.Column className="label" width={2}>
+          Itinerary
+        </Grid.Column>
         <Grid.Column width={4}>
           <Input
             placeholder="Origin Airport"
