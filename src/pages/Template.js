@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Image, Input, Button } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import API from "../utils/API";
 
 function Template() {
   const [formState, setFormState] = useState({
+    airportCodes: [],
     sellerLogo: "",
     sellerName: "",
     sellerPhone: "",
@@ -26,6 +28,16 @@ function Template() {
     distance: "",
     flightTime: "",
     paxCount: ""
+  });
+
+  useEffect(() => {
+    API.getAirports().then(res => {
+      if (!res) {
+        console.log("nothing returned");
+      } else {
+        console.log(res);
+      }
+    });
   });
 
   const history = useHistory();
