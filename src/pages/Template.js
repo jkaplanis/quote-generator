@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Image, Input, Button } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
@@ -30,20 +30,34 @@ function Template() {
     paxCount: ""
   });
 
+  // API call to retrieve airport codes and save them to state
   useEffect(() => {
     API.getAirports().then(res => {
       if (!res) {
-        console.log("nothing returned");
+        console.log("No airports returned from database");
       } else {
-        console.log(res);
+        console.log(res.data);
+        setFormState({ ...formState, airportCodes: res.data });
       }
     });
-  });
+  }, []);
+
+  // render dropdown options for airport selection
+  function renderAiportOptions() {
+    return formState.airportCodes.map(airport => {
+      return (
+        <option
+          key={airport._id}
+          value={`${airport.icaoCode}, ${airport.airportName}, ${airport.city}`}
+        />
+      );
+    });
+  }
 
   const history = useHistory();
   const todaysDate = new Date().toDateString();
 
-  //update state with user input
+  // update state with user input
   const handleChange = event => {
     const { name, value } = event.target;
     setFormState({
@@ -52,6 +66,7 @@ function Template() {
     });
   };
 
+  // display user logo and update state
   const handleImgUpload = event => {
     var file = event.target.files[0];
     var reader = new FileReader();
@@ -203,13 +218,17 @@ function Template() {
           Itinerary
         </Grid.Column>
         <Grid.Column width={4}>
-          <Input
-            placeholder="Origin Airport"
-            name="departAirport"
-            type="text"
-            id="departAirport"
-            onChange={handleChange}
-          />
+          <div>
+            <Input
+              placeholder="Origin Airport"
+              name="departAirport"
+              type="text"
+              id="departAirport"
+              list="airports"
+              onChange={handleChange}
+            />
+            <datalist id="airports">{renderAiportOptions()}</datalist>
+          </div>
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
@@ -262,14 +281,17 @@ function Template() {
       <Grid.Row>
         <Grid.Column width={2}></Grid.Column>
         <Grid.Column width={4}>
-          {" "}
-          <Input
-            placeholder="Destination Airport"
-            name="arriveAirport"
-            type="text"
-            id="arriveAirport"
-            onChange={handleChange}
-          />
+          <div>
+            <Input
+              placeholder="Destination Airport"
+              name="arriveAirport"
+              type="text"
+              id="arriveAirport"
+              list="airports"
+              onChange={handleChange}
+            />
+            <datalist id="airports">{renderAiportOptions()}</datalist>
+          </div>
         </Grid.Column>
         <Grid.Column width={2}>
           <DatePicker
