@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Image, Input, Button } from "semantic-ui-react";
+import { Grid, Image, Input, Button, Icon } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import API from "../utils/API";
@@ -29,6 +29,19 @@ function Template() {
     flightTime: "",
     paxCount: ""
   });
+  const [itinerary, setItinerary] = useState([
+    {
+      departAirport: "",
+      departDate: new Date(),
+      departTime: new Date(),
+      arriveAirport: "",
+      arriveDate: new Date(),
+      arriveTime: new Date(),
+      distance: "",
+      flightTime: "",
+      paxCount: ""
+    }
+  ]);
 
   // API call to retrieve airport codes and save them to state
   useEffect(() => {
@@ -45,12 +58,21 @@ function Template() {
   // render dropdown options for airport selection
   function renderAiportOptions() {
     return formState.airportCodes.map(airport => {
-      return (
-        <option
-          key={airport._id}
-          value={`${airport.icaoCode}, ${airport.airportName}, ${airport.city}`}
-        />
-      );
+      if (airport.airportName === "N/A") {
+        return (
+          <option
+            key={airport._id}
+            value={`${airport.city}, ${airport.country} (${airport.icaoCode})`}
+          />
+        );
+      } else {
+        return (
+          <option
+            key={airport._id}
+            value={`${airport.city}, ${airport.country} (${airport.icaoCode} - ${airport.airportName})`}
+          />
+        );
+      }
     });
   }
 
@@ -64,6 +86,38 @@ function Template() {
       ...formState,
       [name]: value
     });
+  };
+
+  const handleItineraryUpdate = (e, index) => {
+    const { name, value } = e.target;
+    const itineraryData = [...itinerary];
+    itineraryData[index][name] = value;
+    setItinerary(itineraryData);
+  };
+
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setItinerary([
+      ...itinerary,
+      {
+        departAirport: "",
+        departDate: new Date(),
+        departTime: new Date(),
+        arriveAirport: "",
+        arriveDate: new Date(),
+        arriveTime: new Date(),
+        distance: "",
+        flightTime: "",
+        paxCount: ""
+      }
+    ]);
+  };
+
+  // handle click event of the Remove button
+  const handleRemoveClick = index => {
+    const itineraryData = [...itinerary];
+    itineraryData.splice(index, 1);
+    setItinerary(itineraryData);
   };
 
   // display user logo and update state
@@ -213,110 +267,140 @@ function Template() {
         <Grid.Column width={2}>Flight Time</Grid.Column>
         <Grid.Column width={2}>Passenger Count</Grid.Column>
       </Grid.Row>
-      <Grid.Row>
-        <Grid.Column className="label" width={2}>
-          Itinerary
-        </Grid.Column>
-        <Grid.Column width={4}>
-          <div>
-            <Input
-              placeholder="Origin Airport"
-              name="departAirport"
-              type="text"
-              id="departAirport"
-              list="airports"
-              onChange={handleChange}
-            />
-            <datalist id="airports">{renderAiportOptions()}</datalist>
-          </div>
-        </Grid.Column>
-        <Grid.Column width={2}>
-          <DatePicker
-            selected={formState.departDate}
-            onChange={date => setFormState({ ...formState, departDate: date })}
-            dateFormat="MMMM d, yyyy"
-          />
-        </Grid.Column>
-        <Grid.Column width={2}>
-          <DatePicker
-            selected={formState.departTime}
-            onChange={time => setFormState({ ...formState, departTime: time })}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={1}
-            timeCaption="Time"
-            dateFormat="h:mm aa"
-          />
-        </Grid.Column>
-        <Grid.Column width={2}>
-          {" "}
-          <Input
-            placeholder="Nautical Miles"
-            name="distance"
-            type="number"
-            id="distance"
-            onChange={handleChange}
-          />
-        </Grid.Column>
-        <Grid.Column width={2}>
-          {" "}
-          <Input
-            placeholder="Hr:Min"
-            name="flightTime"
-            type="text"
-            id="flightTime"
-            onChange={handleChange}
-          />
-        </Grid.Column>
-        <Grid.Column width={2}>
-          <Input
-            name="paxCount"
-            id="paxCount"
-            type="number"
-            placeholder="0"
-            onChange={handleChange}
-          />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={4}>
-          <div>
-            <Input
-              placeholder="Destination Airport"
-              name="arriveAirport"
-              type="text"
-              id="arriveAirport"
-              list="airports"
-              onChange={handleChange}
-            />
-            <datalist id="airports">{renderAiportOptions()}</datalist>
-          </div>
-        </Grid.Column>
-        <Grid.Column width={2}>
-          <DatePicker
-            selected={formState.arriveDate}
-            onChange={date => setFormState({ ...formState, arriveDate: date })}
-            dateFormat="MMMM d, yyyy"
-          />
-        </Grid.Column>
-        <Grid.Column width={2}>
-          <DatePicker
-            selected={formState.arriveTime}
-            onChange={time => setFormState({ ...formState, arriveTime: time })}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={1}
-            timeCaption="Time"
-            dateFormat="h:mm aa"
-          />
-        </Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-      </Grid.Row>
+      {itinerary.map((x, index) => {
+        return (
+          <>
+            <Grid.Row>
+              <Grid.Column className="label" width={2}>
+                {itinerary.length === 1 ? (
+                  "Itinerary"
+                ) : (
+                  <Icon
+                    onClick={() => handleRemoveClick(index)}
+                    name="delete"
+                    color="red"
+                  />
+                )}
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <div>
+                  <Input
+                    placeholder="Origin Airport"
+                    name="departAirport"
+                    type="text"
+                    id="departAirport"
+                    list="airports"
+                    value={x.departAirport}
+                    onChange={e => handleItineraryUpdate(e, index)}
+                  />
+                  <datalist id="airports">{renderAiportOptions()}</datalist>
+                </div>
+              </Grid.Column>
+              <Grid.Column width={2}>
+                <DatePicker
+                  selected={x.departDate}
+                  onChange={date =>
+                    setItinerary({ ...formState, departDate: date })
+                  }
+                  dateFormat="MMMM d, yyyy"
+                />
+              </Grid.Column>
+              <Grid.Column width={2}>
+                <DatePicker
+                  selected={x.departTime}
+                  onChange={time =>
+                    setFormState({ ...formState, departTime: time })
+                  }
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={1}
+                  timeCaption="Time"
+                  dateFormat="h:mm aa"
+                />
+              </Grid.Column>
+              <Grid.Column width={2}>
+                {" "}
+                <Input
+                  placeholder="Nautical Miles"
+                  name="distance"
+                  type="number"
+                  id="distance"
+                  value={x.distance}
+                  onChange={e => handleItineraryUpdate(e, index)}
+                />
+              </Grid.Column>
+              <Grid.Column width={2}>
+                {" "}
+                <Input
+                  placeholder="Hr:Min"
+                  name="flightTime"
+                  type="text"
+                  id="flightTime"
+                  value={x.flightTime}
+                  onChange={e => handleItineraryUpdate(e, index)}
+                />
+              </Grid.Column>
+              <Grid.Column width={2}>
+                <Input
+                  name="paxCount"
+                  id="paxCount"
+                  type="number"
+                  placeholder="0"
+                  value={x.paxCount}
+                  onChange={e => handleItineraryUpdate(e, index)}
+                />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={4}>
+                <div>
+                  <Input
+                    placeholder="Destination Airport"
+                    name="arriveAirport"
+                    type="text"
+                    id="arriveAirport"
+                    list="airports"
+                    value={x.arriveAirport}
+                    onChange={e => handleItineraryUpdate(e, index)}
+                  />
+                  <datalist id="airports">{renderAiportOptions()}</datalist>
+                </div>
+              </Grid.Column>
+              <Grid.Column width={2}>
+                <DatePicker
+                  selected={x.arriveDate}
+                  onChange={date =>
+                    setFormState({ ...formState, arriveDate: date })
+                  }
+                  dateFormat="MMMM d, yyyy"
+                />
+              </Grid.Column>
+              <Grid.Column width={2}>
+                <DatePicker
+                  selected={x.arriveTime}
+                  onChange={time =>
+                    setFormState({ ...formState, arriveTime: time })
+                  }
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={1}
+                  timeCaption="Time"
+                  dateFormat="h:mm aa"
+                />
+              </Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+            </Grid.Row>{" "}
+          </>
+        );
+      })}
       <Button positive onClick={renderPdf}>
         Create PDF
+      </Button>
+      <Button positive onClick={handleAddClick}>
+        Add Leg
       </Button>
     </Grid>
   );
