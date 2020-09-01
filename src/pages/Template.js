@@ -49,7 +49,6 @@ function Template() {
       if (!res) {
         console.log("No airports returned from database");
       } else {
-        console.log(res.data);
         setFormState({ ...formState, airportCodes: res.data });
       }
     });
@@ -136,7 +135,7 @@ function Template() {
 
   //render pdf upon user clicking create PDF button
   const renderPdf = () => {
-    history.push({ pathname: "/print", formState });
+    history.push({ pathname: "/print", formState, itinerary });
   };
 
   return (
@@ -299,18 +298,22 @@ function Template() {
               <Grid.Column width={2}>
                 <DatePicker
                   selected={x.departDate}
-                  onChange={date =>
-                    setItinerary({ ...formState, departDate: date })
-                  }
+                  onChange={date => {
+                    const itineraryData = [...itinerary];
+                    itineraryData[index]["departDate"] = date;
+                    setItinerary(itineraryData);
+                  }}
                   dateFormat="MMMM d, yyyy"
                 />
               </Grid.Column>
               <Grid.Column width={2}>
                 <DatePicker
                   selected={x.departTime}
-                  onChange={time =>
-                    setFormState({ ...formState, departTime: time })
-                  }
+                  onChange={time => {
+                    const itineraryData = [...itinerary];
+                    itineraryData[index]["departTime"] = time;
+                    setItinerary(itineraryData);
+                  }}
                   showTimeSelect
                   showTimeSelectOnly
                   timeIntervals={1}
@@ -370,18 +373,22 @@ function Template() {
               <Grid.Column width={2}>
                 <DatePicker
                   selected={x.arriveDate}
-                  onChange={date =>
-                    setFormState({ ...formState, arriveDate: date })
-                  }
+                  onChange={date => {
+                    const itineraryData = [...itinerary];
+                    itineraryData[index]["arriveDate"] = date;
+                    setItinerary(itineraryData);
+                  }}
                   dateFormat="MMMM d, yyyy"
                 />
               </Grid.Column>
               <Grid.Column width={2}>
                 <DatePicker
                   selected={x.arriveTime}
-                  onChange={time =>
-                    setFormState({ ...formState, arriveTime: time })
-                  }
+                  onChange={time => {
+                    const itineraryData = [...itinerary];
+                    itineraryData[index]["arriveTime"] = time;
+                    setItinerary(itineraryData);
+                  }}
                   showTimeSelect
                   showTimeSelectOnly
                   timeIntervals={1}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, Image, Button } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
 import html2canvas from "html2canvas";
@@ -7,6 +7,7 @@ import jsPdf from "jspdf";
 function Pdf() {
   const history = useHistory();
   const userInput = history.location.formState;
+  const itinerary = history.location.itinerary;
 
   //convert military time to standard
   const convertTime = time => {
@@ -39,6 +40,10 @@ function Pdf() {
       pdf.save("your-filename.pdf");
     });
   };
+
+  useEffect(() => {
+    console.log(itinerary);
+  }, []);
 
   return (
     <Grid id="page">
@@ -93,32 +98,38 @@ function Pdf() {
         <Grid.Column width={2}>Flight Time</Grid.Column>
         <Grid.Column width={2}>Passenger Count</Grid.Column>
       </Grid.Row>
-      <Grid.Row>
-        <Grid.Column width={2}>Itinerary</Grid.Column>
-        <Grid.Column width={4}>{userInput.departAirport}</Grid.Column>
-        <Grid.Column width={2}>
-          {userInput.departDate.toDateString()}
-        </Grid.Column>
-        <Grid.Column width={2}>
-          {convertTime(userInput.departTime)} PDT
-        </Grid.Column>
-        <Grid.Column width={2}>{userInput.distance} nm</Grid.Column>
-        <Grid.Column width={2}>{userInput.flightTime}</Grid.Column>
-        <Grid.Column width={2}>{userInput.paxCount} PAX</Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={4}> {userInput.arriveAirport}</Grid.Column>
-        <Grid.Column width={2}>
-          {userInput.arriveDate.toDateString()}
-        </Grid.Column>
-        <Grid.Column width={2}>
-          {convertTime(userInput.arriveTime)} EDT
-        </Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-        <Grid.Column width={2}></Grid.Column>
-      </Grid.Row>
+      {itinerary.map((leg, index) => {
+        return (
+          <>
+            <Grid.Row>
+              <Grid.Column width={2}>{`Leg ${index++}`}</Grid.Column>
+              <Grid.Column width={4}>{leg.departAirport}</Grid.Column>
+              <Grid.Column width={2}>
+                {leg.departDate.toDateString()}
+              </Grid.Column>
+              <Grid.Column width={2}>
+                {convertTime(leg.departTime)} PDT
+              </Grid.Column>
+              <Grid.Column width={2}>{leg.distance} nm</Grid.Column>
+              <Grid.Column width={2}>{leg.flightTime}</Grid.Column>
+              <Grid.Column width={2}>{leg.paxCount} PAX</Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={4}> {leg.arriveAirport}</Grid.Column>
+              <Grid.Column width={2}>
+                {leg.arriveDate.toDateString()}
+              </Grid.Column>
+              <Grid.Column width={2}>
+                {convertTime(leg.arriveTime)} EDT
+              </Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+            </Grid.Row>
+          </>
+        );
+      })}
       <Button positive id="print-button" onClick={printPdf}>
         Save PDF
       </Button>
