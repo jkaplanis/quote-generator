@@ -102,7 +102,7 @@ function Pdf() {
         return (
           <>
             <Grid.Row>
-              <Grid.Column width={2}>{`Leg ${index++}`}</Grid.Column>
+              <Grid.Column width={2}>{`Leg ${index + 1}`}</Grid.Column>
               <Grid.Column width={4}>{leg.departAirport}</Grid.Column>
               <Grid.Column width={2}>
                 {leg.departDate.toDateString()}
