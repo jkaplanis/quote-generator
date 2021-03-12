@@ -12,7 +12,7 @@
     "express": "^4.17.1",
     "html2canvas": "^1.0.0-rc.5",
     "if-env": "^1.0.4",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "morgan": "^1.10.0",
     "react": "^16.13.1",
     "react-datepicker": "^3.0.0",
